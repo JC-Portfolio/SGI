@@ -5,6 +5,11 @@ from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.dialects.postgresql import UUID, JSON, BOOLEAN, ARRAY
 
 
+def create_db(app):
+    db.init_app(app)
+    app.db = db
+
+
 class CompanyModel(Model, db.Model):
     __tablename__ = 'company'
 
