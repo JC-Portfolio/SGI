@@ -12,6 +12,7 @@ flask-migrate = "*"
 psycopg2 = "*"
 flask-script = "*"
 flask-jwt-extended = "*"
+request = "*"
 
 [requires]
 python_version = "3.8"
