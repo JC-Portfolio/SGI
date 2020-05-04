@@ -1,5 +1,7 @@
-def uuid():
-    import uuid
+import uuid
+
+
+def create_uuid():
     return str(uuid.uuid4())
 
 
@@ -15,6 +17,7 @@ def dict_value(dic, field):
     # notação de objetos javascript para nested dicts -- > document.cpf
 
     field = field.split('.')
+    print(field)
     try:
         if len(field) >= 1:
             for i in field:
@@ -23,3 +26,15 @@ def dict_value(dic, field):
         dic = None
 
     return dic
+
+#todo REFAZER RESPONSE
+
+
+def response(message=None, http_status=200, data=None):
+    obj_to_return = {
+        "message": message if message else 'Sem messagem',
+    }
+    if data:
+        obj_to_return['data'] = data
+
+    return obj_to_return, http_status
