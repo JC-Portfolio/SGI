@@ -1,6 +1,8 @@
 from flask import request
 from datetime import datetime
 from core.util import response
+from functools import wraps
+from core.insert_validations import InsertValidations
 
 
 class Service:
@@ -17,6 +19,30 @@ class Service:
             return data.get(index, None)
         return data
 
+    @staticmethod
+    def _validation(func):
+        @wraps(func)
+        def validate():
+            insert = InsertValidations()
+
+            if
+
+
+            for x  in dict:
+                insert.add(x)
+
+            insert.is_valid()
+
+
+
+
+
+
+        pass
+
+    #Vou pegar da rota
+
+    @_validation
     def insert(self):
         data = self._data
 
@@ -30,6 +56,7 @@ class Service:
 
         return {f"{self.model.__tablename__}": list_dict}, 200
 
+    @_validation
     def update(self):
 
         self._data['updated_at'] = datetime.now()

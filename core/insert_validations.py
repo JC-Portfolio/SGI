@@ -10,7 +10,7 @@ class InsertValidations(Validations):
         self._field = None
         self._message = None
 
-    def add_raw(self, string, function, message=None):
+    def add_raw(self, string, function, message=None): #TODO testar implementação
         self.__setattr__(f"_test_{function.__name__}", function)
         self._obj.append({"status": self._test(self._string_to_dict(string)), "message": message, "field": self._field})
         return self
