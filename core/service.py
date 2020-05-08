@@ -5,13 +5,39 @@ from functools import wraps
 from core.insert_validations import InsertValidations
 
 
-class Service:
+# TODO implementar addraw na validations e não na insert validations
+# TODO CRIAR CLASSE PARA PEGAR JSON AUTOMATICAMENTE
+# TODO DEIXAR RESPONSE NAS ROTAS E NÃO NOS METODOS
 
-    def __init__(self, model=None):
+
+class ServiceDecorators:
+    @classmethod
+    def _validation(cls, json=None, validations=None):
+        def decorate(func):
+            @wraps(func)
+            def make_validation(*args, **kwargs):
+                insert = InsertValidations(json)
+                for x in validations:
+                    extract_args = x.split(',')
+                    insert.add(*extract_args)
+                insert.is_valid()
+                return func(*args, **kwargs)
+
+            return make_validation
+
+        return decorate
+
+    @classmethod
+    def _profile_type(cls):
+        pass
+
+
+class Service(ServiceDecorators):
+
+    def __init__(self, model):
         self.model = model
         self._data = None
 
-    #TODO CRIAR PROPRIEDADE PARA _DATA
     def data(self, index=None):
         data = self._data if self._data else request.json
 
@@ -19,35 +45,12 @@ class Service:
             return data.get(index, None)
         return data
 
-    @staticmethod
-    def _validation(func):
-        @wraps(func)
-        def validate():
-            insert = InsertValidations()
+    def make_insert(self, json, validations):
+        @ServiceDecorators._validation(json, validations)
+        def insert(self):
+            self.model.insert(self._data)
 
-            if
-
-
-            for x  in dict:
-                insert.add(x)
-
-            insert.is_valid()
-
-
-
-
-
-
-        pass
-
-    #Vou pegar da rota
-
-    @_validation
-    def insert(self):
-        data = self._data
-
-        self.model.insert(data)
-        return response("Registro criado com sucesso", 200)
+        insert(self)
 
     def list(self):
 
@@ -56,19 +59,17 @@ class Service:
 
         return {f"{self.model.__tablename__}": list_dict}, 200
 
-    @_validation
-    def update(self):
+    def make_update(self, validations):
+        @ServiceDecorators._validation(self._data, validations)
+        def update(self):
 
-        self._data['updated_at'] = datetime.now()
+            self._data['updated_at'] = datetime.now()
 
-        obj = self.model.update(self._data)
-        if obj:
-            return response("Cadastro atualizado com sucesso", http_status=200)
+            obj = self.model.update(self._data)
 
-        return response("Cadastro não encontrado", http_status=404)
+        update(self)
 
+    #TODO implementar profile type
     def delete(self):
         for ids in self._data['ids']:
             self.model.delete(ids)
-
-        return response("Registro apagado com sucesso", http_status=200)
