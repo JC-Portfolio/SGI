@@ -38,3 +38,12 @@ def response(message=None, http_status=200, data=None):
         obj_to_return['data'] = data
 
     return obj_to_return, http_status
+
+
+def sanitize_obj(self, _list, required_field):
+    #_list --> lista de objetos json para serem limpos
+    #required_field --> campos desejados , ex:  ['id', 'profile_id', 'status', 'name', 'email', 'profile_id']
+
+    if _list:
+        for index, obj in enumerate(_list):
+            _list[index] = {key: obj[key] for key in obj.keys() if key in required_field}

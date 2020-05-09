@@ -10,7 +10,7 @@ class InsertValidations(Validations):
         self._field = None
         self._message = None
 
-    def add_raw(self, string, function, message=None):
+    def add_raw(self, string, function, message=None): #TODO testar implementação
         self.__setattr__(f"_test_{function.__name__}", function)
         self._obj.append({"status": self._test(self._string_to_dict(string)), "message": message, "field": self._field})
         return self
@@ -20,6 +20,7 @@ class InsertValidations(Validations):
         return self
 
     def _string_to_dict(self, string):
+        print(string)
         string = string.split('IS')
         self._field = string[0].strip()
 
@@ -44,17 +45,18 @@ class InsertValidations(Validations):
                 dic[key] = c[key]
 
             return dic
-
+        print(string)
         conditions = extract_condition_or(string[1])
         conditions = [extract_condition_and(x) for x in conditions]
 
         return [condition_to_dict(x) for x in conditions]
 
     def is_valid(self):
+        from core.api_exceptions import InvalidRegister
         for i in self._obj:
             if i.get('status', None) is False:
                 # TODO CRIAR NOVA CLASSE DE EXEPTIONS E ERRORS HANDLERS
-                raise ApiException(error=self._obj)
+                raise InvalidRegister(self._obj)
 
     def _test(self, array):
         def process_test(item):
