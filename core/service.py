@@ -5,11 +5,6 @@ from functools import wraps
 from core.insert_validations import InsertValidations
 
 
-# TODO implementar addraw na validations e não na insert validations
-# TODO CRIAR CLASSE PARA PEGAR JSON AUTOMATICAMENTE
-# TODO DEIXAR RESPONSE NAS ROTAS E NÃO NOS METODOS
-
-
 class ServiceDecorators:
     @classmethod
     def _validation(cls, json=None, validations=None):
@@ -39,14 +34,14 @@ class Service(ServiceDecorators):
         self._data = None
 
     def data(self, index=None):
-        data = self._data if self._data else request.json
+        self._data = self._data if self._data else request.json
 
         if index:
-            return data.get(index, None)
-        return data
+            return self._data.get(index, None)
+        return self._data
 
-    def make_insert(self, json, validations):
-        @ServiceDecorators._validation(json, validations)
+    def make_insert(self, validations):
+        @ServiceDecorators._validation(self._data, validations)
         def insert(self):
             self.model.insert(self._data)
 
@@ -65,11 +60,11 @@ class Service(ServiceDecorators):
 
             self._data['updated_at'] = datetime.now()
 
-            obj = self.model.update(self._data)
+            self.model.update(self._data)
 
         update(self)
 
     #TODO implementar profile type
-    def delete(self):
+    def delete(self, *args):
         for ids in self._data['ids']:
             self.model.delete(ids)
