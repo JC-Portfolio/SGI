@@ -17,7 +17,6 @@ def dict_value(dic, field):
     # notação de objetos javascript para nested dicts -- > document.cpf
 
     field = field.split('.')
-    print(field)
     try:
         if len(field) >= 1:
             for i in field:
