@@ -6,6 +6,7 @@ from flask_restful import Api
 from database_models import create_db
 from database_models import models
 from resources.user import user
+from resources.company import company
 from .api_exceptions import InvalidRegister, api_handle
 
 
@@ -22,6 +23,7 @@ def create_app():
     Migrate(app, app.db)
 
     app.register_blueprint(user)
+    app.register_blueprint(company)
     app.register_error_handler(InvalidRegister, api_handle)
 
     return app

@@ -1,13 +1,7 @@
 from flask import request
 from datetime import datetime
-from core.util import response
 from functools import wraps
 from core.insert_validations import InsertValidations
-
-
-# TODO implementar addraw na validations e não na insert validations
-# TODO CRIAR CLASSE PARA PEGAR JSON AUTOMATICAMENTE
-# TODO DEIXAR RESPONSE NAS ROTAS E NÃO NOS METODOS
 
 
 class ServiceDecorators:
@@ -39,23 +33,24 @@ class Service(ServiceDecorators):
         self._data = None
 
     def data(self, index=None):
-        data = self._data if self._data else request.json
+        self._data = self._data if self._data else request.json
 
         if index:
-            return data.get(index, None)
-        return data
+            return self._data.get(index, None)
+        return self._data
 
-    def make_insert(self, json, validations):
-        @ServiceDecorators._validation(json, validations)
+    def make_insert(self, validations):
+        @ServiceDecorators._validation(self._data, validations)
         def insert(self):
+            print(self._data, self.model)
             self.model.insert(self._data)
 
         insert(self)
 
-    def list(self):
+    def list(self, *args):
 
         sql_objects = self.model.get_list()
-        list_dict = [new_dict.to_dict() for new_dict in sql_objects]
+        list_dict = [new_dict.sql_to_dict() for new_dict in sql_objects]
 
         return {f"{self.model.__tablename__}": list_dict}, 200
 
@@ -65,11 +60,11 @@ class Service(ServiceDecorators):
 
             self._data['updated_at'] = datetime.now()
 
-            obj = self.model.update(self._data)
+            self.model.update(self._data)
 
         update(self)
 
     #TODO implementar profile type
-    def delete(self):
+    def delete(self, *args):
         for ids in self._data['ids']:
             self.model.delete(ids)

@@ -1,40 +1,29 @@
 from core.service import Service
-from flask import jsonify
-from flask import request
 from flask import Blueprint
 from database_models.models import UserModel
+from core.rest import Rest
 
 
 class UserService(Service):
-
-    def update_validations(self):
-        pass
-
-    def insert_validations(self):
-        pass
-
-#TODO TALVEZ IMPLEMENTAR SINGLETON
+    pass
 
 
 user = Blueprint('user', __name__, url_prefix='/user')
-user_service = UserService(UserModel)
+user_service = UserService(UserModel())
 
 
-@user.route('/register', methods=['POST', 'PUT'])
-def register_user():
-    data = request.json
+@user.route('/register', methods=['POST', 'PUT', 'DEL'])
+def register_users():
 
-    if request.method == 'POST':
-
-        validations = [
+    insert_validations = [
             'name IS not_empty, Informar o nome'
         ]
-        user_service.make_insert(data, validations)
+    update_validations = [
+            'name IS not_empty, Informar o nome'
+        ]
 
-        return {'metodo': 'POST'}
+    rest = Rest(user_service, insert_validations, update_validations)
 
-    return {'metodo': 'UPDATE'}
+    rest.call_rest_method()
 
-
-
-
+#

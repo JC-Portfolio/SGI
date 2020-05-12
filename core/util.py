@@ -17,7 +17,6 @@ def dict_value(dic, field):
     # notação de objetos javascript para nested dicts -- > document.cpf
 
     field = field.split('.')
-    print(field)
     try:
         if len(field) >= 1:
             for i in field:
@@ -26,8 +25,6 @@ def dict_value(dic, field):
         dic = None
 
     return dic
-
-#todo REFAZER RESPONSE
 
 
 def response(message=None, http_status=200, data=None):
@@ -47,3 +44,9 @@ def sanitize_obj(self, _list, required_field):
     if _list:
         for index, obj in enumerate(_list):
             _list[index] = {key: obj[key] for key in obj.keys() if key in required_field}
+
+
+def function_method_http(method):
+    func_method = {'PUT': 'make_update', 'POST': 'make_insert', 'DEL': 'make_delete'}
+
+    return func_method[method]
