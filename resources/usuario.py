@@ -1,18 +1,24 @@
-from core.service import Service
 from flask import Blueprint
-from database_models.models import UserModel
 from core.rest import Rest
+from core.service import Service, ServiceModelQuery
+from database_models.models import UserModel
+
+
+class UserModelQuery(UserModel):
+    pass
 
 
 class UserService(Service):
     pass
 
 
-user = Blueprint('user', __name__, url_prefix='/user')
-user_service = UserService(UserModel())
+user = Blueprint('user', __name__, url_prefix='/')
+user_model_instance = UserModelQuery()
+user_service = UserService(user_model_instance)
+model_service = UserService(user_model_instance)
 
 
-@user.route('/register', methods=['POST', 'PUT', 'DEL'])
+@user.route('user/register', methods=['POST', 'PUT', 'DEL'])
 def register_users():
 
     insert_validations = [
@@ -26,4 +32,3 @@ def register_users():
 
     rest.call_rest_method()
 
-#

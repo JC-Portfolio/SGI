@@ -1,7 +1,7 @@
 from flask import jsonify
 
 
-class InvalidRegister(Exception):
+class ApiException(Exception):
 
     def __init__(self, message, status_code=400, payload=None):
         Exception.__init__(self)

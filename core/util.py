@@ -37,16 +37,12 @@ def response(message=None, http_status=200, data=None):
     return obj_to_return, http_status
 
 
-def sanitize_obj(self, _list, required_field):
+def sanitize_obj(_list, fields_to_remove):
     #_list --> lista de objetos json para serem limpos
-    #required_field --> campos desejados , ex:  ['id', 'profile_id', 'status', 'name', 'email', 'profile_id']
+    #required_field --> campos indesejados , ex:  ['id', 'profile_id', 'status', 'name', 'email', 'profile_id']
 
     if _list:
         for index, obj in enumerate(_list):
-            _list[index] = {key: obj[key] for key in obj.keys() if key in required_field}
+            _list[index] = {key: obj[key] for key in obj.keys() if key not in fields_to_remove}
 
 
-def function_method_http(method):
-    func_method = {'PUT': 'make_update', 'POST': 'make_insert', 'DEL': 'make_delete'}
-
-    return func_method[method]

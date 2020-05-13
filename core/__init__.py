@@ -5,9 +5,9 @@ from flask_jwt_extended import JWTManager
 from flask_restful import Api
 from database_models import create_db
 from database_models import models
-from resources.user import user
-from resources.company import company
-from .api_exceptions import InvalidRegister, api_handle
+from resources.usuario import user
+from resources.empresa import company
+from .api_exceptions import ApiException, api_handle
 
 
 def create_app():
@@ -24,6 +24,6 @@ def create_app():
 
     app.register_blueprint(user)
     app.register_blueprint(company)
-    app.register_error_handler(InvalidRegister, api_handle)
+    app.register_error_handler(ApiException, api_handle)
 
     return app
