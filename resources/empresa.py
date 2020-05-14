@@ -7,14 +7,17 @@ from sqlalchemy import text
 
 class CompanyQueryModel(CompanyModel):
     def join_tables_to_query(self, params, query):
-        # smt = text()
-        #
-        # query = query.from_statement()
-
         return query
 
     def add_column_to_query(self, params, query):
-        pass
+        query = query.add_columns(CompanyModel.id, CompanyModel.name)
+        return query
+
+    def filter_query(self, params, query):
+        if company_name := params.get('company_name', None) is not None:
+            query = query.filter(CompanyModel.name == company_name)
+
+        return query
 
 
 class CompanyService(Service):
@@ -51,9 +54,8 @@ def register_company():
 
 
 @company.route('company', methods=['GET'])
-def get_company():
-    service_query = ServiceModelQuery(company_model_instance)
-    params = service_query.get_params()
+def get():
+    params = service_model.get_params()
 
     return 'ab' , 200
 

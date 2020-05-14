@@ -50,10 +50,10 @@ class InsertValidations(Validations):
         return [condition_to_dict(x) for x in conditions]
 
     def is_valid(self):
-        from core.api_exceptions import InvalidRegister
+        from core.api_exceptions import ApiException
         for i in self._obj:
             if i.get('status', None) is False:
-                raise InvalidRegister(self._obj)
+                raise ApiException(self._obj)
 
     def _test(self, array):
         def process_test(item):

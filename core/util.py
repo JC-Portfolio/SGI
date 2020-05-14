@@ -27,16 +27,6 @@ def dict_value(dic, field):
     return dic
 
 
-def response(message=None, http_status=200, data=None):
-    obj_to_return = {
-        "message": message if message else 'Sem messagem',
-    }
-    if data:
-        obj_to_return['data'] = data
-
-    return obj_to_return, http_status
-
-
 def sanitize_obj(_list, fields_to_remove):
     #_list --> lista de objetos json para serem limpos
     #required_field --> campos indesejados , ex:  ['id', 'profile_id', 'status', 'name', 'email', 'profile_id']

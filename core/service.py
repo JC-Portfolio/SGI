@@ -78,8 +78,9 @@ class ServiceModelQuery:
     @classmethod
     def get_params(cls):
         args = request.args
+        json_args = request.json
 
-        return {"params": args[key] for key in args.keys()}
+        return {"params": args[key] for key in args.keys(), *json_args}
 
     def find_all(self, params):
         query = self.model.query
@@ -100,7 +101,9 @@ class ServiceModelQuery:
 
         return response_obj
 
-    def find_by_id(self, params, uuid):
+    def find_by_id(self, params):
+        uuid = params.get('id', None)
+
         if uuid is None:
             raise ApiException('Você deve informar o registro')
 

@@ -15,7 +15,7 @@ class UserService(Service):
 user = Blueprint('user', __name__, url_prefix='/')
 user_model_instance = UserModelQuery()
 user_service = UserService(user_model_instance)
-model_service = UserService(user_model_instance)
+model_service = ServiceModelQuery(user_model_instance)
 
 
 @user.route('user/register', methods=['POST', 'PUT', 'DEL'])

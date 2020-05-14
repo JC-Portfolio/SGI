@@ -1,7 +1,7 @@
 from flask import Blueprint
 from core.rest import Rest
 from core.service import Service, ServiceModelQuery
-from database_models.models import CinemaModel
+from database_models.models import CinemaModel, MovieTheaterModel
 from sqlalchemy import text
 
 
@@ -29,7 +29,7 @@ service_model = ServiceModelQuery(cinema_model_instance)
 
 
 @cinema.route('cinema/register', methods=['POST', 'PUT', 'DEL'])
-def register_company():
+def register():
 
     insert_validations = [
             'name IS not_empty, Informe o nome',
@@ -51,7 +51,7 @@ def register_company():
 
 
 @cinema.route('cinema', methods=['GET'])
-def get_company():
+def get():
     params = service_model.get_params()
 
     return 'ab' , 200
