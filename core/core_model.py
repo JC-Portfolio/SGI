@@ -1,13 +1,28 @@
-from abc import ABCMeta, abstractmethod
 from datetime import datetime
-
 from sqlalchemy import Column, DateTime, Boolean
 from sqlalchemy.dialects.postgresql import UUID
-
 from database_models import db
+from abc import abstractmethod
+from core.util import create_uuid
+from flask import jsonify, request
 
 
-class Model:
+class AbstractModelQuery:
+
+    @abstractmethod
+    def add_column_to_query(self, params, query):
+        return query
+
+    @abstractmethod
+    def join_tables_to_query(self, params, query):
+        return query
+
+    @abstractmethod
+    def filter_query(self, params, query):
+        return query
+
+
+class Model(AbstractModelQuery):
 
     id = Column(UUID(as_uuid=True), primary_key=True, nullable=False)
     status = Column(Boolean, nullable=True, default=True)
@@ -20,7 +35,6 @@ class Model:
 
     #TODO IMPLMENTAR FUNÇÃO PARA CREATED_BY - PEGAR ID
     def insert(self, json_obj):
-        from core.util import create_uuid
         json_obj['id'] = create_uuid() if 'id' not in json_obj.keys() else json_obj['id']
 
         for keys in json_obj.keys():
@@ -58,9 +72,4 @@ class Model:
             db.session.commit()
 
 
-class ModelQueryAbstract(metaclass=ABCMeta):
-    pass
 
-
-class ModelQuery:
-    pass

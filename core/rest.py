@@ -14,6 +14,8 @@ class Rest:
         self._insert_validations = insert_validations
         self._update_validations = update_validations
 
+    #TODO IMPLEMENTAR CLASSE CHECK TOKEN
+
     @classmethod
     def _detect_method(cls):
         method = request.method

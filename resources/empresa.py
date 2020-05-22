@@ -1,18 +1,34 @@
 from flask import Blueprint
 from core.rest import Rest
-from core.service import Service
+from core.service import Service, ServiceModelQuery
 from database_models.models import CompanyModel
+from sqlalchemy import text
+
+
+class CompanyQueryModel(CompanyModel):
+    def join_tables_to_query(self, params, query):
+        return query
+
+    def add_column_to_query(self, params, query):
+        query = query.add_columns(CompanyModel.id, CompanyModel.name)
+        return query
+
+    def filter_query(self, params, query):
+        if company_name := params.get('company_name', None) is not None:
+            query = query.filter(CompanyModel.name == company_name)
+
+        return query
 
 
 class CompanyService(Service):
     pass
 
-#TODO IMPLEMENTAR CLASSE DE QUERYS
-#TODO ARRUMAR ROTAS
-
 
 company = Blueprint('company', __name__, url_prefix='/')
-company_service = CompanyService(CompanyModel())
+
+company_model_instance = CompanyQueryModel()
+company_service = CompanyService(company_model_instance)
+service_model = ServiceModelQuery(CompanyQueryModel)
 
 
 @company.route('company/register', methods=['POST', 'PUT', 'DEL'])
@@ -37,10 +53,11 @@ def register_company():
     return rest.response()
 
 
-@company.route('company', method=['GET'])
-def get_company():
+@company.route('company', methods=['GET'])
+def get():
+    params = service_model.get_params()
 
-    return company_service.list()
+    return 'ab' , 200
 
 
 #
